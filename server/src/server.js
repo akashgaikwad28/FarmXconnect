@@ -1,7 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const connectDB = require("./src/config/db");
+const connectDB = require("./config/db.js");
 
 // Load environment variables
 dotenv.config();
@@ -14,9 +14,9 @@ app.use(express.json());
 app.use(cors());
 
 // Import Routes
-const authRoutes = require("./src/routes/authRoutes");
-const tradeRoutes = require("./src/routes/tradeRoutes");
-const marketRoutes = require("./src/routes/marketRoutes");
+const authRoutes = require("./routes/authRoutes");
+const tradeRoutes = require("./routes/tradeRoutes");
+const marketRoutes = require("./routes/marketRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/trades", tradeRoutes);
