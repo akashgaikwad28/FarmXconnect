@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 // Import Routes
+const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const tradeRoutes = require("./routes/tradeRoutes");
 const marketRoutes = require("./routes/marketInsightsRoutes.js");
@@ -21,6 +22,7 @@ const offerRoutes = require("./routes/offerRoutes");
 const marketInsightsRoutes = require("./routes/marketInsightsRoutes");
 
 // Use Routes
+app.use("/api/users", userRoutes);
 app.use("/api/offers", offerRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/trades", tradeRoutes);
