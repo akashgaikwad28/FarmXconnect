@@ -17,7 +17,11 @@ app.use(cors());
 const authRoutes = require("./routes/authRoutes");
 const tradeRoutes = require("./routes/tradeRoutes");
 const marketRoutes = require("./routes/marketRoutes");
+const offerRoutes = require("./routes/offerRoutes");
 
+
+// Use Routes
+app.use("/api/offers", offerRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/trades", tradeRoutes);
 app.use("/api/market", marketRoutes);
