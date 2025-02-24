@@ -1,7 +1,8 @@
 const express = require("express");
 const upload = require("../utils/upload"); // Import the upload middleware
 const postController = require("../controllers/postController");
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("../middlewares/authMiddleware");
+
 
 const router = express.Router();
 

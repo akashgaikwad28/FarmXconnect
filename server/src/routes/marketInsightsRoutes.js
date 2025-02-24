@@ -1,6 +1,7 @@
 const express = require("express");
 const { getAllMarketInsights, addDummyMarketData } = require("../controllers/marketInsightsController");
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("../middlewares/authMiddleware");
+
 
 const router = express.Router();
 

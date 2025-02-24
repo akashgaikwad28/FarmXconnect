@@ -1,6 +1,7 @@
 const express = require("express");
 const { sendOffer, getUserOffers, updateOfferStatus } = require("../controllers/offerController");
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("../middlewares/authMiddleware");
+
 
 const router = express.Router();
 

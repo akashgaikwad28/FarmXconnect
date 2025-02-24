@@ -6,7 +6,8 @@ const {
   updateUserProfile,
   getAllUsers
 } = require("../controllers/userController");
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("../middlewares/authMiddleware");
+
 
 const router = express.Router();
 
@@ -17,5 +18,3 @@ router.put("/profile", authMiddleware, updateUserProfile); // Update profile
 router.get("/", authMiddleware, getAllUsers); // Get all users (admin use case)
 
 module.exports = router;
-
-
