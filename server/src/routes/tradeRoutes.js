@@ -1,4 +1,11 @@
-const express = require('express');
+const express = require("express");
+const { createTradeOffer, getTradeOffers, updateTradeStatus } = require("../controllers/tradeController");
+const authMiddleware = require("../middleware/authMiddleware");
+
 const router = express.Router();
-// Add your trade-related routes here
+
+router.post("/", authMiddleware, createTradeOffer); // Create a trade offer
+router.get("/", authMiddleware, getTradeOffers); // Get all trade offers
+router.put("/:tradeId", authMiddleware, updateTradeStatus); // Accept/Reject trade offer
+
 module.exports = router;
