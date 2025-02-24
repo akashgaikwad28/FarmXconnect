@@ -20,14 +20,15 @@ const tradeRoutes = require("./routes/tradeRoutes");
 const marketRoutes = require("./routes/marketInsightsRoutes.js");
 const offerRoutes = require("./routes/offerRoutes");
 const marketInsightsRoutes = require("./routes/marketInsightsRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 
-// Use Routes
 app.use("/api/users", userRoutes);
 app.use("/api/offers", offerRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/trades", tradeRoutes);
 app.use("/api/market", marketRoutes);
 app.use("/api/market-insights", marketInsightsRoutes);
+app.use("/api/messages", messageRoutes);
 
 
 // Start Server
