@@ -16,15 +16,17 @@ app.use(cors());
 // Import Routes
 const authRoutes = require("./routes/authRoutes");
 const tradeRoutes = require("./routes/tradeRoutes");
-const marketRoutes = require("./routes/marketRoutes");
+const marketRoutes = require("./routes/marketInsightsRoutes.js");
 const offerRoutes = require("./routes/offerRoutes");
-
+const marketInsightsRoutes = require("./routes/marketInsightsRoutes");
 
 // Use Routes
 app.use("/api/offers", offerRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/trades", tradeRoutes);
 app.use("/api/market", marketRoutes);
+app.use("/api/market-insights", marketInsightsRoutes);
+
 
 // Start Server
 const PORT = process.env.PORT || 5000;
