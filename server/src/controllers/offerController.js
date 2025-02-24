@@ -1,4 +1,5 @@
-const Offer = require("../models/Offer");
+const Offer = require("../models/Offers");
+
 
 // Send an Offer
 exports.sendOffer = async (req, res) => {
