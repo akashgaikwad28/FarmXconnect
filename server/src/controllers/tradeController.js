@@ -15,7 +15,8 @@ exports.createTradeOffer = async (req, res) => {
 
     res.status(201).json({ message: "Trade offer created!", data: newTrade });
   } catch (error) {
-    res.status(500).json(new ApiError(500, "Error creating trade offer."));
+    res.status(500).json(new ApiError(500, "Error creating trade offer. Please try again later."));
+
 
   }
 };
@@ -29,7 +30,8 @@ exports.getTradeOffers = async (req, res) => {
 
     res.status(200).json(trades);
   } catch (error) {
-    res.status(500).json(new ApiError(500, "Error fetching trade offers."));
+    res.status(500).json(new ApiError(500, "Error fetching trade offers. Please try again later."));
+
 
   }
 };
@@ -52,7 +54,8 @@ exports.updateTradeStatus = async (req, res) => {
     res.status(200).json({ message: "Trade status updated!", trade });
 
   } catch (error) {
-    res.status(500).json(new ApiError(500, "Error updating trade status."));
+    res.status(500).json(new ApiError(500, "Error updating trade status. Please try again later."));
+
 
   }
 };

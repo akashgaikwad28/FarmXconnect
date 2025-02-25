@@ -26,9 +26,10 @@ const TradeSchema = new mongoose.Schema({
   },
   status: { 
     type: String, 
-    enum: ["Pending", "Negotiating", "Completed", "Sold Out"], 
+    enum: ["Pending", "Negotiating", "Completed", "Sold Out", "Cancelled"], 
     default: "Pending" 
   },
+
   createdAt: { 
     type: Date, 
     default: Date.now 
