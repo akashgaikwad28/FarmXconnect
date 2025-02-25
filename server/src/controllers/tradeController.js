@@ -15,7 +15,8 @@ exports.createTradeOffer = async (req, res) => {
 
     res.status(201).json({ message: "Trade offer created!", data: newTrade });
   } catch (error) {
-    res.status(500).json({ error: "Error creating trade offer." });
+    res.status(500).json(new ApiError(500, "Error creating trade offer."));
+
   }
 };
 
@@ -28,7 +29,8 @@ exports.getTradeOffers = async (req, res) => {
 
     res.status(200).json(trades);
   } catch (error) {
-    res.status(500).json({ error: "Error fetching trade offers." });
+    res.status(500).json(new ApiError(500, "Error fetching trade offers."));
+
   }
 };
 
@@ -38,7 +40,8 @@ exports.updateTradeStatus = async (req, res) => {
     const { status } = req.body;
     const trade = await Trade.findById(req.params.tradeId);
 
-    if (!trade) return res.status(404).json({ error: "Trade offer not found." });
+    if (!trade) return res.status(404).json(new ApiError(404, "Trade offer not found."));
+
 
     if (trade.farmer.toString() !== req.user.id)
       return res.status(403).json({ error: "Only the farmer can update this trade." });
@@ -47,7 +50,9 @@ exports.updateTradeStatus = async (req, res) => {
     await trade.save();
 
     res.status(200).json({ message: "Trade status updated!", trade });
+
   } catch (error) {
-    res.status(500).json({ error: "Error updating trade status." });
+    res.status(500).json(new ApiError(500, "Error updating trade status."));
+
   }
 };

@@ -20,7 +20,8 @@ exports.sendOffer = async (req, res) => {
     res.status(201).json({ message: "Offer sent successfully!", offer: newOffer });
 
   } catch (error) {
-    res.status(500).json({ error: "Error sending offer." });
+    res.status(500).json(new ApiError(500, "Error sending offer."));
+
   }
 };
 
@@ -32,7 +33,8 @@ exports.getUserOffers = async (req, res) => {
     res.status(200).json(offers);
 
   } catch (error) {
-    res.status(500).json({ error: "Error fetching offers." });
+    res.status(500).json(new ApiError(500, "Error fetching offers."));
+
   }
 };
 
@@ -43,7 +45,8 @@ exports.updateOfferStatus = async (req, res) => {
     const { status } = req.body; // "Accepted" or "Rejected"
 
     const offer = await Offer.findById(offerId);
-    if (!offer) return res.status(404).json({ error: "Offer not found." });
+    if (!offer) return res.status(404).json(new ApiError(404, "Offer not found."));
+
 
     offer.status = status;
     await offer.save();

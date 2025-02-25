@@ -22,10 +22,8 @@ const errorHandler = (err, req, res, next) => {
     error = new ApiError(400, message);
   }
 
-  res.status(error.statusCode || 500).json({
-    success: false,
-    error: error.message || "Server Error"
-  });
+    res.status(error.statusCode || 500).json(new ApiError(error.statusCode || 500, error.message || "Server Error"));
+
 };
 
 module.exports = errorHandler;

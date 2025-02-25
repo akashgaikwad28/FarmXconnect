@@ -1,47 +1,41 @@
 const mongoose = require("mongoose");
 
 const TradeSchema = new mongoose.Schema({
-  farmer: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "User", 
-    required: true 
-  },
+  // Indexing for performance optimization
   trader: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "User", 
     required: true 
   },
-  post: { 
+  farmer: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: "Post", 
+    ref: "User", 
+    required: true 
+  },
+  crop: { 
+    type: String, 
+    required: true 
+  },
+  price: { 
+    type: Number, 
+    required: true 
+  },
+  quantity: { 
+    type: Number, 
     required: true 
   },
   status: { 
     type: String, 
-    enum: ["Pending", "Negotiating", "Completed"], 
+    enum: ["Pending", "Negotiating", "Completed", "Sold Out"], 
     default: "Pending" 
   },
-  priceNegotiated: { 
-    type: Number 
-  },
-  messages: [{ 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "Message" 
-  }],
   createdAt: { 
     type: Date, 
     default: Date.now 
-  },
-  // For traders, whether the crop is added to their cart or not
-  addedToCart: {
-    type: Boolean,
-    default: false,  // Initially, the crop is not in the cart
-  },
-  // For farmers, whether the crop has been sold
-  soldCrop: {
-    type: Boolean,
-    default: false,  // Initially, the crop is not marked as sold
   }
 });
+
+// Create an index on trader and farmer for faster queries
+TradeSchema.index({ trader: 1, farmer: 1 });
 
 module.exports = mongoose.model("Trade", TradeSchema);

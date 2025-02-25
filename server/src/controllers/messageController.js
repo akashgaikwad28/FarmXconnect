@@ -12,7 +12,8 @@ exports.sendMessage = async (req, res) => {
 
     res.status(201).json({ message: "Message sent successfully!", data: newMessage });
   } catch (error) {
-    res.status(500).json({ error: "Error sending message." });
+    res.status(500).json(new ApiError(500, "Error sending message."));
+
   }
 };
 
@@ -28,6 +29,7 @@ exports.getMessages = async (req, res) => {
 
     res.status(200).json(messages);
   } catch (error) {
-    res.status(500).json({ error: "Error retrieving messages." });
+    res.status(500).json(new ApiError(500, "Error retrieving messages."));
+
   }
 };
