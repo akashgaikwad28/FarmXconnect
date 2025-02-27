@@ -45,6 +45,13 @@ exports.updateOfferStatus = async (req, res) => {
 
     const offer = await Offer.findById(offerId);
     if (!offer) return res.status(404).json(new ApiError(404, "Offer not found."));
+    
+    // Check if the user is the owner of the offer
+    if (offer.sender.toString() !== req.user.id) {
+        return res.status(403).json(new ApiError(403, "You are not authorized to update this offer."));
+    }
+
+    if (!offer) return res.status(404).json(new ApiError(404, "Offer not found."));
 
     offer.status = status;
     await offer.save();

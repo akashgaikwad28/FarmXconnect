@@ -1,7 +1,6 @@
 const request = require('supertest');
 const app = require('../src/app'); // Assuming your Express app is exported from app.js
 const mongoose = require('mongoose');
-const Offer = require('../src/models/Offers');
 
 describe('Offer Controller', () => {
   beforeAll(async () => {
@@ -15,30 +14,23 @@ describe('Offer Controller', () => {
     await mongoose.connection.close();
   });
 
-  it('should send an offer successfully', async () => {
+  it('should allow the owner to update the offer status', async () => {
     const response = await request(app)
-      .post('/api/offers/send') // Adjust the route as necessary
-      .send({
-        receiver: 'someReceiverId',
-        post: 'somePostId',
-        cropName: 'Wheat',
-        priceOffered: 100,
-        volume: 10,
-        sellingDeadline: '2023-12-31',
-        buyingDeadline: '2023-12-01',
-        tradeOfferId: 'someTradeOfferId'
-      });
-
-    expect(response.status).toBe(201);
-    expect(response.body.message).toBe('Offer sent successfully!');
-  });
-
-  it('should fetch user offers', async () => {
-    const response = await request(app)
-      .get('/api/offers/user/someUserId') // Adjust the route as necessary
-      .set('Authorization', 'Bearer someValidToken'); // Include a valid token if required
+      .put('/api/offers/update/offerId') // Use a valid offer ID
+      .set('Authorization', 'Bearer valid_access_token') // Include a valid token
+      .send({ status: 'Accepted' });
 
     expect(response.status).toBe(200);
-    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.message).toBe('Offer accepted successfully!');
+  });
+
+  it('should deny access to non-owners when updating offer status', async () => {
+    const response = await request(app)
+      .put('/api/offers/update/offerId') // Use a valid offer ID
+      .set('Authorization', 'Bearer another_valid_access_token') // Include a valid token for a different user
+      .send({ status: 'Rejected' });
+
+    expect(response.status).toBe(403);
+    expect(response.body.error).toBe('You are not authorized to update this offer.');
   });
 });

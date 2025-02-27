@@ -5,13 +5,16 @@ const authMiddleware = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-// Send an offer (Trader -> Farmer OR Farmer -> Trader)
-router.post("/send", authMiddleware, sendOffer);
+const authMiddleware = require("../middlewares/authMiddleware");
 
-// Get all offers received by a user (Farmer or Trader)
-router.get("/user/:userId", authMiddleware, getUserOffers);
+// Send an offer (Trader -> Farmer OR Farmer -> Trader
+router.post("/send", authMiddleware(['Trader']), sendOffer);
 
-// Accept or Reject an offer
-router.put("/update/:offerId", authMiddleware, updateOfferStatus);
+
+router.get("/user/:userId", authMiddleware(['Farmer', 'Trader']), getUserOffers);
+
+
+router.put("/update/:offerId", authMiddleware, updateOfferStatus); // Ensure only the user can update their offer
+
 
 module.exports = router;
