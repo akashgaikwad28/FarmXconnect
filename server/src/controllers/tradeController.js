@@ -36,7 +36,22 @@ exports.getTradeOffers = async (req, res) => {
   }
 };
 
+ // 📌 Get Trade History for a User
+exports.getTradeHistory = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const tradeHistory = await Trade.find({
+      $or: [{ trader: userId }, { farmer: userId }],
+    }).populate("trader farmer", "name email");
+
+    res.status(200).json(tradeHistory);
+  } catch (error) {
+    res.status(500).json(new ApiError(500, "Error fetching trade history. Please try again later."));
+  }
+};
+
 // 📌 Update Trade Status (Accept/Reject)
+
 exports.updateTradeStatus = async (req, res) => {
   try {
     const { status } = req.body;
