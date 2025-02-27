@@ -1,12 +1,13 @@
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
 
-  // Validate user credentials (this should include hashing and comparing passwords)
+  // Validate user credentials
   const user = await User.findOne({ email });
-  if (!user || user.password !== password) {
+  if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
@@ -23,27 +24,24 @@ const login = async (req, res) => {
   res.status(200).json({ accessToken, refreshToken });
 };
 
-const refreshAccessToken = async (req, res) => {
-  const { token } = req.body;
+const registerUser = async (req, res) => {
+  const { name, email, password, phone, location, role } = req.body;
 
-  if (!token) {
-    return res.status(401).json({ message: 'Refresh token is required' });
-  }
+  // Check if user already exists
+  const existingUser = await User.findOne({ email });
+  if (existingUser) return res.status(400).json({ error: "User already exists." });
 
-  const user = await User.findOne({ refreshToken: token });
-  if (!user) {
-    return res.status(403).json({ message: 'Invalid refresh token' });
-  }
+  // Hash the password before saving
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Generate new access token
-  const accessToken = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '15m' });
+  // Create new user
+  const user = await User.create({ name, email, password: hashedPassword, phone, location, role });
 
-  res.status(200).json({ accessToken });
+  res.status(201).json({
+    message: "User registered successfully!",
+    user: { id: user._id, name: user.name, email: user.email, role: user.role },
+    token: generateToken(user),
+  });
 };
 
-const logout = (req, res) => {
-  // Clear the token on the client side
-  res.status(200).json({ message: "Logged out successfully." });
-};
-
-module.exports = { login, refreshAccessToken, logout };
+module.exports = { login, registerUser };

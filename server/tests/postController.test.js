@@ -1,7 +1,6 @@
 const request = require('supertest');
 const app = require('../src/app'); // Assuming your Express app is exported from app.js
 const mongoose = require('mongoose');
-const Post = require('../src/models/Post');
 
 describe('Post Controller', () => {
   beforeAll(async () => {
@@ -15,27 +14,50 @@ describe('Post Controller', () => {
     await mongoose.connection.close();
   });
 
-  it('should create a post with an image upload', async () => {
+  it('should create a new post successfully', async () => {
     const response = await request(app)
       .post('/api/posts/create') // Adjust the route as necessary
-      .set('Authorization', 'Bearer someValidToken') // Include a valid token if required
-      .field('location', 'Farm Location')
-      .field('description', 'This is a test post')
-      .attach('media', 'path/to/test/image.jpg'); // Adjust the path to a test image
+      .set('Authorization', 'Bearer valid_access_token') // Include a valid token
+      .send({ 
+        location: 'Test Location', 
+        description: 'Test Description', 
+        video: 'test_video.mp4' 
+      });
 
     expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty('image');
+    expect(response.body).toHaveProperty('user');
   });
 
-  it('should create a post with a video upload', async () => {
+  it('should get all posts successfully', async () => {
     const response = await request(app)
-      .post('/api/posts/create') // Adjust the route as necessary
-      .set('Authorization', 'Bearer someValidToken') // Include a valid token if required
-      .field('location', 'Farm Location')
-      .field('description', 'This is a test post with video')
-      .attach('media', 'path/to/test/video.mp4'); // Adjust the path to a test video
+      .get('/api/posts') // Adjust the route as necessary
+      .set('Authorization', 'Bearer valid_access_token'); // Include a valid token
 
-    expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty('video');
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+  });
+
+  it('should update a post successfully', async () => {
+    const postId = 'valid_post_id'; // Replace with a valid post ID
+    const response = await request(app)
+      .put(`/api/posts/${postId}`) // Adjust the route as necessary
+      .set('Authorization', 'Bearer valid_access_token') // Include a valid token
+      .send({ 
+        location: 'Updated Location', 
+        description: 'Updated Description' 
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('location', 'Updated Location');
+  });
+
+  it('should delete a post successfully', async () => {
+    const postId = 'valid_post_id'; // Replace with a valid post ID
+    const response = await request(app)
+      .delete(`/api/posts/${postId}`) // Adjust the route as necessary
+      .set('Authorization', 'Bearer valid_access_token'); // Include a valid token
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('message', 'Post deleted successfully.');
   });
 });

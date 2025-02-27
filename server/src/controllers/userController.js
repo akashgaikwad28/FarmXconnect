@@ -1,5 +1,6 @@
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
 // Generate JWT Token
 const generateToken = (user) => {
@@ -8,7 +9,7 @@ const generateToken = (user) => {
   });
 };
 
-// 🆕 Register User
+// Register User
 exports.registerUser = async (req, res) => {
   try {
     const { name, email, password, phone, location, role } = req.body;
@@ -17,8 +18,11 @@ exports.registerUser = async (req, res) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ error: "User already exists." });
 
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Create new user
-    const user = await User.create({ name, email, password, phone, location, role });
+    const user = await User.create({ name, email, password: hashedPassword, phone, location, role });
 
     res.status(201).json({
       message: "User registered successfully!",
@@ -30,13 +34,13 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// 🔑 Login User
+// Login User
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
-    if (!user || !(await user.matchPassword(password))) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: "Invalid email or password." });
     }
 
@@ -50,7 +54,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// 📄 Get User Profile
+// Get User Profile
 exports.getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -62,7 +66,7 @@ exports.getUserProfile = async (req, res) => {
   }
 };
 
-// ✏️ Update User Profile
+// Update User Profile
 exports.updateUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -73,7 +77,7 @@ exports.updateUserProfile = async (req, res) => {
     user.email = req.body.email || user.email;
     user.phone = req.body.phone || user.phone;
     user.location = req.body.location || user.location;
-    if (req.body.password) user.password = req.body.password;
+    if (req.body.password) user.password = await bcrypt.hash(req.body.password, 10); // Hash new password
 
     const updatedUser = await user.save();
     res.status(200).json({ message: "Profile updated successfully!", user: updatedUser });
@@ -82,7 +86,7 @@ exports.updateUserProfile = async (req, res) => {
   }
 };
 
-// 🔍 Get All Users (Admin use case)
+// Get All Users (Admin use case)
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
