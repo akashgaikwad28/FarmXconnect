@@ -2,7 +2,8 @@ const Post = require("../models/Post");
 
 const createPost = async (req, res) => {
   try {
-    const { cropName, price, volume, description } = req.body;
+const { location, description } = req.body; // Include location
+
     let imageUrl = "";
 
     // Check if a file was uploaded
@@ -12,11 +13,12 @@ const createPost = async (req, res) => {
 
     const newPost = new Post({
       user: req.user.id,
-      cropName,
-      price,
-      volume,
+      location, // Add location
+
       description,
       image: imageUrl, // Store the image URL
+      video: req.body.video // Assuming video is also sent in the request body
+
     });
 
     await newPost.save();

@@ -7,6 +7,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const router = express.Router();
 
 // Route for creating a post (with an image/video upload)
-router.post("/create", authMiddleware, upload.single("file"), postController.createPost);
+router.post("/create", authMiddleware, upload.single("media"), postController.createPost);
+
 
 module.exports = router;
