@@ -4,7 +4,8 @@ const Offer = require("../models/Offers");
 // Send an Offer
 exports.sendOffer = async (req, res) => {
   try {
-    const { receiver, post, cropName, priceOffered, volume } = req.body;
+    const { receiver, post, cropName, priceOffered, volume, sellingDeadline, buyingDeadline } = req.body;
+
     const sender = req.user.id;
 
     const newOffer = new Offer({
@@ -14,7 +15,10 @@ exports.sendOffer = async (req, res) => {
       cropName,
       priceOffered,
       volume,
+      sellingDeadline, // Include sellingDeadline
+      buyingDeadline, // Include buyingDeadline
     });
+
 
     await newOffer.save();
     res.status(201).json({ message: "Offer sent successfully!", offer: newOffer });
