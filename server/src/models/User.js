@@ -9,6 +9,8 @@ const UserSchema = new mongoose.Schema({
   location: { type: String, required: true },
   phone: { type: String },
   createdAt: { type: Date, default: Date.now },
+  refreshToken: { type: String } // Added field for storing refresh token
 });
+
 
 module.exports = mongoose.model("User", UserSchema);
