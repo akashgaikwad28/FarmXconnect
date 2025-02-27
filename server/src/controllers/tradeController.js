@@ -24,9 +24,27 @@ exports.createTradeOffer = async (req, res) => {
 // 📌 Get Trade Offers (For Trader and Farmer)
 exports.getTradeOffers = async (req, res) => {
   try {
-    const trades = await Trade.find({
+    const { location, crop, price, deadlineType, deadline } = req.query; // Accept filter parameters
+    const filter = {
       $or: [{ trader: req.user.id }, { farmer: req.user.id }],
-    }).populate("trader farmer", "name email");
+    };
+
+    // Add filters based on query parameters
+    if (location) {
+      filter.location = location; // Assuming location is a field in Trade model
+    }
+    if (crop) {
+      filter.crop = crop; // Assuming crop is a field in Trade model
+    }
+    if (price) {
+      filter.price = { $lte: price }; // Filter trades with price less than or equal to the specified price
+    }
+    if (deadlineType && deadline) {
+      filter[deadlineType] = { $lte: new Date(deadline) }; // Filter based on buying/selling deadline
+    }
+    
+    const trades = await Trade.find(filter).populate("trader farmer", "name email");
+
 
     res.status(200).json(trades);
   } catch (error) {
